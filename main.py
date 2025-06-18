@@ -6,6 +6,8 @@ from starlette.exceptions import HTTPException as StarletteHTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from todos import router
 import config
+from database import Base, engine
+Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 
