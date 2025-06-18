@@ -6,17 +6,19 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-# La contraseña va antes del "@" y el último corchete y paréntesis estaban faltando
-SQLALCHEMY_DATABASE_URL = (
-    f"postgresql://{os.environ['DATABASE_USER']}:"  # Usuario y dos puntos
-    f"{os.environ['DATABASE_PASSWORD']}@"           # Contraseña y arroba
-    f"{os.environ['DATABASE_HOST']}/"               # Host y barra
-    f"{os.environ['DATABASE_NAME']}"                # Nombre de la BD (corchete de cierre)
-) # Parentesis de cierre de la f-string
+# Intentamos usar la variable DATABASE_URL completa (por ejemplo en Render)
+DATABASE_URL = os.environ.get("DATABASE_URL")
 
-engine = create_engine(
-    SQLALCHEMY_DATABASE_URL
-)
+if not DATABASE_URL:
+    # Si no está, armamos la URL con variables individuales (útil para local)
+    DATABASE_URL = (
+        f"postgresql://{os.environ.get('DATABASE_USER')}:"  
+        f"{os.environ.get('DATABASE_PASSWORD')}@"           
+        f"{os.environ.get('DATABASE_HOST')}/"               
+        f"{os.environ.get('DATABASE_NAME')}"
+    )
+
+engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 Base = declarative_base()

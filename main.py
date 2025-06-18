@@ -9,8 +9,7 @@ import config
 
 app = FastAPI()
 
-app.include_router(router) # Descomentar cuando el router exista
-
+app.include_router(router)
 
 origins_ejemplo = [
     "http://localhost:3000",
@@ -49,3 +48,5 @@ def read_root(settings: config.Settings = Depends(get_settings)):
 @app.get("/items/{item_id}")
 def read_item(item_id: int, q: Union[str, None] = None):
     return {"item_id": item_id, "q": q}
+import os
+print("DATABASE_URL is:", os.environ.get("DATABASE_URL"))
